@@ -1,0 +1,138 @@
+/* Общие стили */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+/* Стили навигации */
+.navbar-brand {
+    font-weight: 600;
+}
+
+.nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    transform: translateY(-2px);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+/* Карточки */
+.card {
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Кнопки */
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Таблицы */
+.table {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table thead th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Формы */
+.form-control, .form-select {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Статусы заявок */
+.status-badge {
+    padding: 0.5em 1em;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.footer{
+    position: fixed !important;
+    bottom: 0 !important;
+    width: 100% !important;
+}
+
+
+.status-new { background-color: #cff4fc; color: #055160; }
+.status-reviewing { background-color: #fff3cd; color: #664d03; }
+.status-interview { background-color: #d1e7dd; color: #0f5132; }
+.status-offer { background-color: #f8d7da; color: #842029; }
+.status-hired { background-color: #d1e7dd; color: #0f5132; }
+.status-rejected { background-color: #f8d7da; color: #842029; }
+
+.card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+canvas {
+    max-width: 100%;
+}
+
+#deleteModal{
+    padding-right: 0 !important;
+}
+.modal-open{
+    padding-right: 0 !important;
+}

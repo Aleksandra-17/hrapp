@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Создание заявки</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Создание заявки</h1>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form action="/applications/create" method="post">
+                <div class="row g-3">
+                    <!-- Кандидат -->
+                    <div class="col-md-6">
+                        <label for="candidate" class="form-label">Кандидат</label>
+                        <select class="form-select" id="candidate" name="candidate.id" required>
+                            <option value="">Выберите кандидата</option>
+                            <option th:each="candidate : ${candidates}"
+                                    th:value="${candidate.id}"
+                                    th:text="${candidate.firstName + ' ' + candidate.lastName}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Вакансия -->
+                    <div class="col-md-6">
+                        <label for="vacancy" class="form-label">Вакансия</label>
+                        <select class="form-select" id="vacancy" name="vacancy.id" required>
+                            <option value="">Выберите вакансию</option>
+                            <option th:each="vacancy : ${vacancies}"
+                                    th:value="${vacancy.id}"
+                                    th:text="${vacancy.position + ' (' + vacancy.employer.companyName + ')'}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Комментарии -->
+                    <div class="col-12">
+                        <label for="comments" class="form-label">Комментарии</label>
+                        <textarea class="form-control" id="comments" name="comments" rows="3"></textarea>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="col-12">
+                        <a href="/applications" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад
+                        </a>
+                        <button type="submit" class="btn btn-primary float-end">
+                            <i class="fas fa-save me-2"></i>Создать
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

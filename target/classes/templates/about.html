@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Об авторе</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center p-5">
+                        <img src="/images/img.png"
+                             alt="Фото автора"
+                             class="rounded-circle mb-4"
+                             style="width: 150px; height: 150px; object-fit: cover;">
+
+                        <h1 class="display-5 mb-4">Александра</h1>
+
+                        <p class="lead text-muted mb-4">
+                            Студент группы ИМЯ ГРУППЫ
+                        </p>
+
+                        <div class="row g-4 justify-content-center mb-4">
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-envelope fs-4 text-primary me-2"></i>
+                                    <span>ivanov@example.com</span>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-phone fs-4 text-primary me-2"></i>
+                                    <span>+7 (999) 123-45-67</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-top pt-4">
+                            <h5 class="mb-3">О проекте</h5>
+                            <p class="text-muted">
+                                Данный проект представляет собой систему управления рекрутментом,
+                                разработанную в рамках курсового проекта. Система позволяет
+                                эффективно управлять процессом найма, включая работу с вакансиями,
+                                кандидатами и заявками на трудоустройство.
+                            </p>
+
+                            <h5 class="mb-3 mt-4">Использованные технологии</h5>
+                            <div class="row justify-content-center g-3">
+                                <div class="col-auto">
+                                        <span class="badge bg-primary p-2">
+                                            <i class="fab fa-java me-2"></i>Java Spring Boot
+                                        </span>
+                                </div>
+                                <div class="col-auto">
+                                        <span class="badge bg-success p-2">
+                                            <i class="fas fa-database me-2"></i>PostgreSQL
+                                        </span>
+                                </div>
+                                <div class="col-auto">
+                                        <span class="badge bg-info p-2">
+                                            <i class="fab fa-bootstrap me-2"></i>Bootstrap 5
+                                        </span>
+                                </div>
+                                <div class="col-auto">
+                                        <span class="badge bg-warning text-dark p-2">
+                                            <i class="fas fa-code me-2"></i>Thymeleaf
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

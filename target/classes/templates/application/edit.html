@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Редактирование заявки</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Редактирование заявки #[[${application.id}]]</h1>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/applications/{id}/edit(id=${application.id})}" method="post">
+                <input type="hidden" name="id" th:value="${application.id}">
+
+                <div class="row g-3">
+                    <!-- Кандидат -->
+                    <div class="col-md-6">
+                        <label for="candidate" class="form-label">Кандидат</label>
+                        <select class="form-select" id="candidate" name="candidate.id" required>
+                            <option value="">Выберите кандидата</option>
+                            <option th:each="candidate : ${candidates}"
+                                    th:value="${candidate.id}"
+                                    th:text="${candidate.firstName + ' ' + candidate.lastName}"
+                                    th:selected="${application.candidate != null && application.candidate.id == candidate.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Вакансия -->
+                    <div class="col-md-6">
+                        <label for="vacancy" class="form-label">Вакансия</label>
+                        <select class="form-select" id="vacancy" name="vacancy.id" required>
+                            <option value="">Выберите вакансию</option>
+                            <option th:each="vacancy : ${vacancies}"
+                                    th:value="${vacancy.id}"
+                                    th:text="${vacancy.position + ' (' + vacancy.employer.companyName + ')'}"
+                                    th:selected="${application.vacancy != null && application.vacancy.id == vacancy.id}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Статус -->
+                    <div class="col-md-6">
+                        <label for="status" class="form-label">Статус</label>
+                        <select class="form-select" id="status" name="status" required>
+                            <option th:each="statusOption : ${T(org.example.hrapp.model.ApplicationStatus).values()}"
+                                    th:value="${statusOption}"
+                                    th:text="${statusOption.displayValue}"
+                                    th:selected="${application.status == statusOption}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Комментарии -->
+                    <div class="col-12">
+                        <label for="comments" class="form-label">Комментарии</label>
+                        <textarea class="form-control" id="comments" name="comments"
+                                  rows="3" th:text="${application.comments}"></textarea>
+                    </div>
+
+                    <!-- Кнопки -->
+                    <div class="col-12">
+                        <a href="/applications" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад
+                        </a>
+                        <button type="submit" class="btn btn-primary float-end">
+                            <i class="fas fa-save me-2"></i>Сохранить
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

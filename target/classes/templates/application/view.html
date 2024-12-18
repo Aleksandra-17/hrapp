@@ -1,0 +1,113 @@
+<!-- templates/application/view.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Просмотр заявки</title>
+    <script>
+        async function updateStatus() {
+            const statusSelect = document.getElementById("statusSelect");
+            const status = statusSelect.value;
+            const applicationId = document.getElementById("applicationId").value;
+
+            if (!applicationId || applicationId.trim() === "") {
+                console.error("ID заявки не найден!");
+                alert("ID заявки не найден!");
+                return;
+            }
+            try {
+                const response = await fetch(`/applications/${applicationId}/status`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: `status=${status}`
+                });
+
+                if (response.ok) {
+                    alert("Статус успешно обновлен!");
+                    window.location.reload();
+                } else {
+                    const errorText = await response.text();
+                    console.error("Ошибка обновления статуса:", errorText);
+                    alert(`Ошибка обновления статуса: ${response.status}`);
+                }
+            } catch (error) {
+                console.error("Ошибка при запросе:", error);
+                alert("Произошла ошибка. Проверьте консоль для деталей.");
+            }
+        }
+
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <!-- Заголовок с заявкой -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Заявка # [[${id}]]</h1>
+        <!-- Скрытое поле для ID заявки -->
+        <input type="hidden" id="applicationId" th:value="${id}">
+    </div>
+
+    <!-- Основная информация -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Информация о заявке</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Кандидат:</strong> [[${candidate.firstName}]] [[${candidate.lastName}]]</p>
+                    <p><strong>Вакансия:</strong> [[${vacancy.position}]]</p>
+                    <p><strong>Компания:</strong> [[${vacancy.employer.companyName}]]</p>
+                    <p><strong>Дата подачи:</strong> [[${date}]]</p>
+                    <p><strong>Комментарии:</strong> [[${comments ?: 'Нет комментариев'}]]</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма изменения статуса -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Статус заявки</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="statusSelect" class="form-label">Изменить статус:</label>
+                        <select id="statusSelect" class="form-select" th:value="${status}">
+                            <option value="NEW" th:selected="${status == 'NEW'}">Новая</option>
+                            <option value="REVIEWING" th:selected="${status == 'REVIEWING'}">На рассмотрении</option>
+                            <option value="INTERVIEW_SCHEDULED" th:selected="${status == 'INTERVIEW_SCHEDULED'}">Назначено собеседование</option>
+                            <option value="INTERVIEWED" th:selected="${status == 'INTERVIEWED'}">Прошел собеседование</option>
+                            <option value="OFFER_MADE" th:selected="${status == 'OFFER_MADE'}">Сделано предложение</option>
+                            <option value="ACCEPTED" th:selected="${status == 'ACCEPTED'}">Принято</option>
+                            <option value="REJECTED" th:selected="${status == 'REJECTED'}">Отклонено</option>
+                        </select>
+                    </div>
+
+                    <button type="button" class="btn btn-primary w-100" onclick="updateStatus()">
+                        <i class="fas fa-check me-2"></i>Обновить статус
+                    </button>
+
+                    <!-- Текущий статус -->
+                    <div class="mt-3">
+                        <strong>Текущий статус:</strong>
+                        <span class="badge"
+                              th:classappend="${status == 'NEW' ? 'bg-info' :
+                               status == 'REVIEWING' ? 'bg-primary' :
+                               status == 'INTERVIEW_SCHEDULED' ? 'bg-warning' :
+                               status == 'INTERVIEWED' ? 'bg-secondary' :
+                               status == 'OFFER_MADE' || status == 'ACCEPTED' ? 'bg-success' :
+                               'bg-danger'}">
+                            [[${status}]]
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

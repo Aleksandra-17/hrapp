@@ -1,0 +1,114 @@
+<!-- templates/vacancy/view.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title th:text="'Вакансия: ' + ${vacancy.position}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 th:text="${vacancy.position}"></h1>
+        <div class="btn-group">
+            <a th:href="@{/vacancies/{id}/edit(id=${vacancy.id})}" class="btn btn-warning">
+                <i class="fas fa-edit me-2"></i>Редактировать
+            </a>
+            <button type="button"
+                    class="btn btn-danger"
+                    onclick="confirmDelete()">
+                <i class="fas fa-trash me-2"></i>Удалить
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Описание вакансии</h5>
+                    <p th:text="${vacancy.description}" class="card-text"></p>
+
+                    <h5 class="card-title mt-4">Требования</h5>
+                    <p th:text="${vacancy.requirements}" class="card-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Информация</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong>Компания:</strong>
+                            <span th:text="${vacancy.employer.companyName}"></span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Зарплата:</strong>
+                            <span th:text="${vacancy.salary}"></span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Статус:</strong>
+                            <span class="badge bg-success" th:if="${vacancy.active}">Активна</span>
+                            <span class="badge bg-secondary" th:unless="${vacancy.active}">Закрыта</span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Дата публикации:</strong>
+                            <span th:text="${#temporals.format(vacancy.createdAt, 'dd.MM.yyyy')}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Статистика</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <strong>Всего заявок:</strong>
+                            <span th:text="${vacancy.applications.size()}"></span>
+                        </li>
+                        <li class="mb-2">
+                            <strong>Активных заявок:</strong>
+                            <span th:text="${activeApplications}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения удаления -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Подтверждение удаления</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Вы уверены, что хотите удалить эту вакансию?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                <form th:action="@{/vacancies/{id}(id=${vacancy.id})}" method="POST">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        function confirmDelete() {
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            modal.show();
+        }
+    </script>
+</th:block>
+</body>
+</html>

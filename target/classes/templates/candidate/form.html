@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title th:text="${candidate.id != null ? 'Редактирование кандидата' : 'Новый кандидат'}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 th:text="${candidate.id != null ? 'Редактирование кандидата' : 'Новый кандидат'}"></h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form th:action="${candidate.id != null ? '/candidates/' + candidate.id + '/edit' : '/candidates/create'}"
+                  th:object="${candidate}"
+                  method="post">
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">Имя</label>
+                        <input type="text"
+                               class="form-control"
+                               id="firstName"
+                               th:field="*{firstName}"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Фамилия</label>
+                        <input type="text"
+                               class="form-control"
+                               id="lastName"
+                               th:field="*{lastName}"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email"
+                               class="form-control"
+                               id="email"
+                               th:field="*{email}"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Телефон</label>
+                        <input type="tel"
+                               class="form-control"
+                               id="phone"
+                               th:field="*{phone}"
+                               required>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="skills" class="form-label">Навыки</label>
+                        <textarea class="form-control"
+                                  id="skills"
+                                  th:field="*{skills}"
+                                  rows="3"></textarea>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="resume" class="form-label">Резюме</label>
+                        <textarea class="form-control"
+                                  id="resume"
+                                  th:field="*{resume}"
+                                  rows="5"></textarea>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <a th:href="@{/candidates}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Назад
+                        </a>
+                        <button type="submit" class="btn btn-primary float-end">
+                            <i class="fas fa-save me-2"></i>Сохранить
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Дашборд</title>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-pie.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.11.0/js/anychart-cartesian.min.js"></script>
+
+    <style>
+        #chartContainer {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="mb-4">Дашборд</h1>
+
+    <!-- Карточки статистики -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>Новые заявки</h5>
+                    <p class="display-4" th:text="${statistics['NEW']} ?: 0">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>Прошли интервью</h5>
+                    <p class="display-4" th:text="${statistics['INTERVIEWED']} ?: 0">0</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>Отклонено</h5>
+                    <p class="display-4" th:text="${statistics['REJECTED']} ?: 0">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- График -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Статистика заявок</h5>
+        </div>
+        <div class="card-body">
+            <div id="chartContainer"></div>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Заявки по вакансиям</h5>
+        </div>
+        <div class="card-body">
+            <div id="vacancyChart" style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5>Динамика заявок</h5>
+        </div>
+        <div class="card-body">
+            <div id="timelineChart" style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+    <!-- Таблица -->
+    <div class="card">
+        <div class="card-header">
+            <h5>Список заявок</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Кандидат</th>
+                        <th>Вакансия</th>
+                        <th>Статус</th>
+                        <th>Дата подачи</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="app : ${applications}">
+                        <td th:text="${app.id}">1</td>
+                        <td th:text="${app.candidate?.firstName + ' ' + app.candidate?.lastName ?: 'Нет данных'}">
+                            Имя Фамилия</td>
+                        <td th:text="${app.vacancy?.position ?: 'Нет данных'}">Позиция</td>
+                        <td th:text="${app.status}">Статус</td>
+                        <td th:text="${#temporals.format(app.applicationDate, 'dd.MM.yyyy HH:mm')}">Дата</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const vacancyStats = /*[[${vacancyStats}]]*/ {} || {};
+            const dateStats = /*[[${dateStats}]]*/ {} || {};
+            const NEW_COUNT = [[${statistics['NEW']}]] || 0;
+            const INTERVIEWED_COUNT = [[${statistics['INTERVIEWED']}]] || 0;
+            const REJECTED_COUNT = [[${statistics['REJECTED']}]] || 0;
+
+            const statusData = [
+                ['Новые заявки', NEW_COUNT],
+                ['Прошли интервью', INTERVIEWED_COUNT],
+                ['Отклонены', REJECTED_COUNT]
+            ];
+
+            const chart = anychart.pie(statusData);
+            chart.title('Распределение заявок по статусам');
+            chart.radius('40%');
+            chart.legend(true);
+            chart.legend().position('right');
+            chart.legend().itemsLayout('vertical');
+            chart.container('chartContainer');
+            chart.draw();
+
+            const vacancyData = Object.entries(vacancyStats);
+
+            const vacancyChart = anychart.column();
+            vacancyChart.data(vacancyData);
+            vacancyChart.title('Количество заявок по вакансиям');
+            vacancyChart.xAxis().labels().rotation(-45);
+            vacancyChart.container('vacancyChart');
+            vacancyChart.draw();
+
+            const timelineData = Object.entries(dateStats).sort((a, b) => a[0].localeCompare(b[0]));
+
+            const timelineChart = anychart.line();
+            timelineChart.data(timelineData);
+            timelineChart.title('Динамика подачи заявок');
+            timelineChart.yAxis().title('Количество заявок');
+            timelineChart.xAxis().title('Дата');
+            timelineChart.container('timelineChart');
+            timelineChart.draw();
+        });
+    </script>
+</div>
+</body>
+</html>

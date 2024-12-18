@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Редактирование заявки</title>
+</head>
+<body>
+<div layout:fragment="content" class="container py-4">
+    <!-- Отладка -->
+    <div>
+        <p>Отладка ID: <span th:text="${appData.id}">ID не задан</span></p>
+        <p>Отладка Статус: <span th:text="${appData.status}">Статус не задан</span></p>
+    </div>
+
+    <h1>Редактирование заявки №<span th:text="${appData.id}"></span></h1>
+
+    <form th:action="@{/applications/{id}/edit(id=${appData.id})}" method="post">
+        <input type="hidden" name="id" th:value="${appData.id}" />
+
+        <!-- Кандидат -->
+        <div class="mb-3">
+            <label>Кандидат</label>
+            <select name="candidate.id" class="form-select">
+                <option value="">--Выберите кандидата--</option>
+                <option th:each="c : ${candidates}"
+                        th:value="${c.id}"
+                        th:text="${c.firstName + ' ' + c.lastName}"
+                        th:selected="${appData.candidate != null && appData.candidate.id == c.id}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Вакансия -->
+        <div class="mb-3">
+            <label>Вакансия</label>
+            <select name="vacancy.id" class="form-select">
+                <option value="">--Выберите вакансию--</option>
+                <option th:each="v : ${vacancies}"
+                        th:value="${v.id}"
+                        th:text="${v.position}"
+                        th:selected="${appData.vacancy != null && appData.vacancy.id == v.id}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Статус -->
+        <div class="mb-3">
+            <label>Статус</label>
+            <select name="status" class="form-select">
+                <option th:each="status : ${allStatuses}"
+                        th:value="${status}"
+                        th:text="${statusMap.get(status)}"
+                        th:selected="${appData.status == status}">
+                </option>
+            </select>
+        </div>
+
+        <!-- Комментарии -->
+        <div class="mb-3">
+            <label>Комментарии</label>
+            <textarea name="comments" class="form-control"
+                      th:text="${appData.comments}"></textarea>
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <a href="/applications" class="btn btn-secondary">Отмена</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

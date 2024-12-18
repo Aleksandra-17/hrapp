@@ -1,0 +1,119 @@
+<!--list example -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base}">
+<head>
+    <title>Работодатели</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Работодатели</h1>
+        <a href="/employers/create" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Добавить работодателя
+        </a>
+    </div>
+
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <div th:each="employer : ${employers}" class="col-md-6 col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <h5 class="card-title mb-0">
+                            <a th:href="@{/employers/{id}(id=${employer.id})}"
+                               class="text-decoration-none"
+                               th:text="${employer.companyName}"></a>
+                        </h5>
+                        <span class="badge bg-primary">
+                                <i class="fas fa-briefcase me-1"></i>
+                                <span th:text="${employer.vacancies.size()}">0</span> вакансий
+                            </span>
+                    </div>
+
+                    <p class="card-text">
+                        <i class="fas fa-user me-2"></i>
+                        <span th:text="${employer.contactPerson}">Контактное лицо</span>
+                    </p>
+                    <p class="card-text">
+                        <i class="fas fa-envelope me-2"></i>
+                        <a th:href="'mailto:' + ${employer.email}"
+                           th:text="${employer.email}"
+                           class="text-decoration-none"></a>
+                    </p>
+                    <p class="card-text">
+                        <i class="fas fa-phone me-2"></i>
+                        <span th:text="${employer.phone}"></span>
+                    </p>
+                    <p class="card-text">
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span th:text="${employer.address}"></span>
+                    </p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <div class="btn-group w-100">
+                        <a th:href="@{/employers/{id}(id=${employer.id})}"
+                           class="btn btn-outline-primary">
+                            <i class="fas fa-eye me-1"></i>Просмотр
+                        </a>
+                        <a th:href="@{/employers/{id}/edit(id=${employer.id})}"
+                           class="btn btn-outline-warning">
+                            <i class="fas fa-edit me-1"></i>Изменить
+                        </a>
+                        <button type="button"
+                                class="btn btn-outline-danger"
+                                th:onclick="'confirmDelete(\'' + ${employer.id} + '\')'">
+                            <i class="fas fa-trash me-1"></i>Удалить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${employers.empty}" class="col-12">
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle me-2"></i>Работодатели пока не добавлены
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Подтверждение удаления</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Вы уверены, что хотите удалить этого работодателя? Это действие нельзя будет отменить.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <form id="deleteForm" method="POST">
+                        <button type="submit" class="btn btn-danger">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block layout:fragment="scripts">
+    <script>
+        function confirmDelete(id) {
+            const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+            const form = document.getElementById('deleteForm');
+            form.action = `/employers/${id}/delete`;
+            modal.show();
+        }
+    </script>
+</th:block>
+</body>
+</html>
